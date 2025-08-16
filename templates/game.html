@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Palavra Obscura - Jogo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Adivinha a palavra!</h1>
+        <div class="grid">
+            {% for guess in guesses %}
+                <div class="row">
+                    {% for i in range(letters) %}
+                        {% set char = guess[i] %}
+                        {% if char == session.word[i] %}
+                            <div class="cell correct">{{ char }}</div>
+                        {% elif char in session.word %}
+                            <div class="cell present">{{ char }}</div>
+                        {% else %}
+                            <div class="cell absent">{{ char }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% for i in range(attempts) %}
+                <div class="row">
+                    {% for j in range(letters) %}
+                        <div class="cell"></div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <form action="{{ url_for('guess') }}" method="post" class="guess-form">
+            <input type="text" name="guess" maxlength="{{ letters }}" required>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <!-- Popup de resultado -->
+    <div class="result-popup" id="resultPopup">
+        <h2 id="resultTitle"></h2>
+        <p id="resultWord"></p>
+        <p>Recompensa: <span id="resultExp"></span> EXP</p>
+        <div class="exp-bar">
+            <div class="exp-fill" id="expFill"></div>
+        </div>
+        <button class="close-btn" onclick="closePopup()">Fechar</button>
+    </div>
+
+    <script>
+        function showResult(win, word, exp) {
+            const popup = document.getElementById("resultPopup");
+            const title = document.getElementById("resultTitle");
+            const wordText = document.getElementById("resultWord");
+            const expFill = document.getElementById("expFill");
+            const expText = document.getElementById("resultExp");
+
+            title.textContent = win ? "Parabéns!" : "Perdeste!";
+            wordText.textContent = `A palavra era "${word}"`;
+            expText.textContent = exp;
+
+            popup.classList.add("show");
+            popup.classList.toggle("win", win);
+            popup.classList.toggle("lose", !win);
+
+            // animação da barra de EXP
+            expFill.style.width = "0%";
+            setTimeout(() => {
+                expFill.style.width = exp + "%";
+            }, 100);
+        }
+
+        function closePopup() {
+            const popup = document.getElementById("resultPopup");
+            popup.classList.remove("show");
+        }
+    </script>
+
+    <!-- Chamada do popup pelo Flask -->
+    {% if result %}
+    <script>
+        showResult({{ result.win|tojson }}, "{{ session.word }}", {{ result.exp }});
+    </script>
+    {% endif %}
+</body>
+</html>

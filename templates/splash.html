@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>A Palavra Obscura</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center; /* Centralizado horizontalmente */
+            align-items: center; /* Centralizado verticalmente */
+            background: linear-gradient(135deg, #1a1a1a, #121212);
+            font-family: 'Arial', sans-serif;
+            color: #ffffff;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(-50px); /* Ligeiramente acima do centro */
+        }
+
+        h1 {
+            font-size: 5em; /* Título grande */
+            margin: 0;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: titleAnim 2s ease-in-out forwards, glow 2s infinite alternate;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.5em; /* Subtítulo */
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: subtitleAnim 2s ease-in-out 1s forwards;
+            text-align: center;
+        }
+
+        @keyframes titleAnim {
+            0% {opacity: 0; transform: scale(0.8);}
+            50% {opacity: 1; transform: scale(1.1);}
+            100% {opacity: 1; transform: scale(1);}
+        }
+
+        @keyframes subtitleAnim {
+            0% {opacity: 0; transform: translateY(20px);}
+            50% {opacity: 1; transform: translateY(-5px);}
+            100% {opacity: 1; transform: translateY(0);}
+        }
+
+        @keyframes glow {
+            0% {text-shadow: 0 0 5px #fff;}
+            50% {text-shadow: 0 0 20px #0ff, 0 0 30px #0ff;}
+            100% {text-shadow: 0 0 5px #fff;}
+        }
+
+        .fade-out {
+            animation: fadeOutScreen 1s forwards;
+        }
+
+        @keyframes fadeOutScreen {
+            0% {opacity: 1;}
+            100% {opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title">A Palavra Obscura</h1>
+    <p id="subtitle">Desenvolvido por Kiko</p>
+
+    <script>
+        // Adiciona fade-out antes de ir ao menu
+        setTimeout(function(){
+               document.body.classList.add('fade-out');
+        }, 3500);
+
+        // Redireciona para o menu após 4 segundos
+        setTimeout(function(){
+            window.location.href = "{{ url_for('menu') }}";
+        }, 4000);
+    </script>
+</body>
+</html>

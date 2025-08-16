@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Palavra Obscura - Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="menu-container">
+        <header>
+            <h1>A Palavra Obscura</h1>
+            <div class="user-info">
+                <span class="username">{{ user }}</span>
+                <span class="level">Nível: {{ level }}</span>
+            </div>
+            <div class="exp-bar">
+                <div class="exp-fill" style="width: {{ exp }}%;"></div>
+            </div>
+        </header>
+
+        <div class="menu-content">
+            <div class="button-group" id="language-group">
+                <h2>Idioma</h2>
+                <button class="menu-btn active">Português</button>
+                <button class="menu-btn">Inglês</button>
+            </div>
+
+            <div class="button-group" id="letters-group">
+                <h2>Número de Letras</h2>
+                <button class="menu-btn">4</button>
+                <button class="menu-btn">5</button>
+                <button class="menu-btn">6</button>
+                <button class="menu-btn">7</button>
+            </div>
+
+            <form action="{{ url_for('start_game') }}" method="post" id="playForm">
+                <input type="hidden" name="language" id="languageInput" value="pt">
+                <input type="hidden" name="letters" id="lettersInput" value="4">
+                <button type="submit" class="menu-btn play-btn">Jogar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const languageButtons = document.querySelectorAll("#language-group .menu-btn");
+        const lettersButtons = document.querySelectorAll("#letters-group .menu-btn");
+        const languageInput = document.getElementById("languageInput");
+        const lettersInput = document.getElementById("lettersInput");
+
+        languageButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                languageButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                languageInput.value = btn.textContent.toLowerCase() === "português" ? "pt" : "en";
+            });
+        });
+
+        lettersButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                lettersButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                lettersInput.value = btn.textContent;
+            });
+        });
+    </script>
+</body>
+</html>
