@@ -40,12 +40,19 @@ def save_data(data):
 def exp_needed(level):
     return level * 100
 
+# ================= Splash =================
 @app.route("/")
+def splash():
+    return render_template("splash.html")
+
+# ================= Menu =================
+@app.route("/menu")
 def menu():
     data = load_data()
     exp_percentage = (data["exp"] / exp_needed(data["level"])) * 100
     return render_template("menu.html", user=data["user"], level=data["level"], exp=exp_percentage)
 
+# ================= Start Game =================
 @app.route("/start_game", methods=["POST"])
 def start_game():
     language = request.form["language"]
@@ -61,6 +68,7 @@ def start_game():
 
     return redirect(url_for("game"))
 
+# ================= Game =================
 @app.route("/game")
 def game():
     if "word" not in session:
@@ -70,6 +78,7 @@ def game():
                            attempts=session["attempts"],
                            guesses=session["guesses"])
 
+# ================= Guess =================
 @app.route("/guess", methods=["POST"])
 def guess():
     guess_word = request.form["guess"].lower()
@@ -99,6 +108,7 @@ def guess():
 
     return redirect(url_for("game"))
 
+# ================= Main =================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
